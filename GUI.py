@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from main import makepdf
+import tkinter.filedialog
+import os
 
 def add_edu():
     eduExpList1.insert(tk.END, eduExpTime.get())
@@ -17,13 +19,27 @@ def add_work():
 
 
 def processpdf():
-    makepdf(name.get(), edu.get(), age.get(), tel.get(), sex.get(), email.get(), eduExpList1, eduExpList2,
-            workExpList1, workExpList2, tech.get('0.0', tk.END), eva.get('0.0', tk.END))
+    makepdf(pdf_path.get(), name.get(), edu.get(), age.get(), tel.get(), sex.get(), email.get(), pic_path.get(),
+            eduExpList1, eduExpList2,workExpList1, workExpList2, tech.get('0.0', tk.END), eva.get('0.0', tk.END))
+
+
+def select_picpath():
+    path = tk.filedialog.askopenfilename()
+    path = path.replace("/", "\\")
+    pic_path.delete(0, tk.END)
+    pic_path.insert(0, path)
+
+
+def select_pdfpath():
+    path = tk.filedialog.asksaveasfilename(defaultextension='.pdf', filetypes=[("pdf files", '*.pdf')])
+    path = path.replace("/", "\\")
+    pdf_path.delete(0, tk.END)
+    pdf_path.insert(0, path)
 
 
 window = tk.Tk()
 window.title('简历自动生成工具')
-window.geometry('500x750')
+window.geometry('500x800')
 
 mighty1 = ttk.LabelFrame(window, text=' 基本信息 ')  # 限制在第一个子框架内
 mighty1.pack(padx=5, pady=5)  # 子框架位置
@@ -46,6 +62,9 @@ tel.grid(row=1, column=3, padx=2, pady=3)
 tk.Label(mighty1, text="邮箱：").grid(row=2, column=2, padx=2, pady=3)
 email = tk.Entry(mighty1, width=25)
 email.grid(row=2, column=3, padx=2, pady=3)
+pic_path = tk.Entry(mighty1, width=55)
+pic_path.grid(row=3, column=0, columnspan=4, padx=2, pady=3, sticky=tk.W)
+tk.Button(mighty1, text="选择图片", command=select_picpath).grid(row=3, column=3, padx=2, pady=3, sticky=tk.E)
 
 
 mighty2 = ttk.LabelFrame(window, text=' 教育背景 ')
@@ -93,7 +112,10 @@ eva.pack(padx=5, pady=5)
 
 mighty6 = ttk.LabelFrame(window)
 mighty6.pack(padx=5, pady=5)
-tk.Button(mighty6, text="生成pdf", command=processpdf).pack(pady=5)
+pdf_path = tk.Entry(mighty6, width=45)
+pdf_path.grid(row=0, column=0, padx=2, pady=3)
+tk.Button(mighty6, text="选择保存路径", command=select_pdfpath).grid(row=0, column=1, padx=2, pady=3)
+tk.Button(mighty6, text="生成pdf", command=processpdf).grid(row=0, column=2, padx=2, pady=3)
 
 window.mainloop()
 

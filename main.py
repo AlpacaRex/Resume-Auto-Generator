@@ -21,9 +21,13 @@ def figure_font(eduExpList1, eduExpList2, workExpList1, workExpList2, tech, eva)
     return font
 
 
-def makepdf(name, edu, age, tel, sex, email, eduExpList1, eduExpList2, workExpList1, workExpList2, tech, eva):
+def makepdf(pdf_path, name, edu, age, tel, sex, email, pic_path, eduExpList1, eduExpList2, workExpList1, workExpList2,
+            tech, eva):
     pdfmetrics.registerFont(TTFont('fzlt', '字体/FZLTHJW.TTF'))
     font = figure_font(eduExpList1, eduExpList2, workExpList1, workExpList2, tech, eva)
+    I = Image(pic_path)
+    I.drawHeight = 3.5*cm
+    I.drawWidth = 2.5*cm
     print(font)
     print(eduExpList1.size())
     print(eduExpList1.size())
@@ -32,7 +36,7 @@ def makepdf(name, edu, age, tel, sex, email, eduExpList1, eduExpList2, workExpLi
     print(" ")
     story = []
 
-    doc = SimpleDocTemplate("简历.pdf", leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm)
+    doc = SimpleDocTemplate(pdf_path, leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm)
 
     styles = getSampleStyleSheet()  # 获得reportlab预先设定的文本模板
     styles.add(ParagraphStyle(name='title1', alignment=TA_JUSTIFY, fontName="fzlt", fontSize=2*font, wordWrap="CJK"))
@@ -50,13 +54,14 @@ def makepdf(name, edu, age, tel, sex, email, eduExpList1, eduExpList2, workExpLi
     table_style = [
         ('FONTNAME', (0, 0), (-1, -1), 'fzlt'),
         ('FONTSIZE', (0, 0), (-1, -1), font),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('ALIGN', (0, 0), (3, 3), 'LEFT'),
+        ('ALIGN', (-1, 0), (-1, -1), 'RIGHT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-
+        ('SPAN', (-1, 0), (-1, -1))
     ]
-    table_data = [['姓名：', name, '学历：', edu],
-                  ['年龄：', age, '电话：', tel],
-                  ['性别：', sex, '邮箱：', email],
+    table_data = [['姓名：', name, '学历：', edu, I],
+                  ['年龄：', age, '电话：', tel, ''],
+                  ['性别：', sex, '邮箱：', email, ''],
                   ]
     # 生成表格
     table_table = Table(table_data, colWidths=font*5, rowHeights=font*1.5, style=table_style, hAlign='LEFT')
